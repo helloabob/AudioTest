@@ -8,6 +8,7 @@
 
 #import "AudioQueueRecorder.h"
 #import <faac.h>
+#import "DataQueue.h"
 
 faacEncHandle hEncoder;
 unsigned long inputSamples;
@@ -25,7 +26,7 @@ NSString *fileName;
     static AudioQueueRecorder *sharedNetUtilsInstance = nil;
     static dispatch_once_t predicate; dispatch_once(&predicate, ^{
         sharedNetUtilsInstance = [[self alloc] init];
-        sharedNetUtilsInstance->serial_queue = dispatch_queue_create("com.bo.serial_dj", NULL);
+        sharedNetUtilsInstance->serial_queue = dispatch_queue_create("com.bo.serial_audio", NULL);
     });
     return sharedNetUtilsInstance;
 }
@@ -38,12 +39,12 @@ static void HandleInputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuffe
     if (pAqData->recording==NO) {
         return;
     }
-    static int count=0;
-    count++;
-    if (count%10==0) {
-        NSLog(@"send_audio_data");
-        count=0;
-    }
+//    static int count=0;
+//    count++;
+//    if (count%10==0) {
+//        NSLog(@"send_audio_data");
+//        count=0;
+//    }
     
 //    NSData *audioData = [NSData dataWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
 //    NSLog(@"old_data_count:%d", audioData.length);
@@ -68,6 +69,8 @@ static void HandleInputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuffe
         int nRet=faacEncEncode(hEncoder, (int32_t *)tmp.bytes, inputSamples, outputBuffer, bufferSize);
         
         if (nRet>0) {
+//            NSData *data = [NSData dataWithBytes:outputBuffer length:nRet];
+//            [[DataQueue sharedInstance] pushData:data withType:DataTypeAudio];
             NSMutableData *dt = [NSMutableData dataWithContentsOfFile:fileName];
             if (dt==nil) {
                 dt = [NSMutableData data];
@@ -104,7 +107,7 @@ static void HandleInputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuffe
 - (BOOL)startRecord {
     
     
-    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(endRecord) userInfo:nil repeats:NO];
+//    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(endRecord) userInfo:nil repeats:NO];
     
     fileName = [[NSHomeDirectory() stringByAppendingPathComponent:@"tmp/test.aac"] retain];
     

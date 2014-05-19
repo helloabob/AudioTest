@@ -10,13 +10,17 @@
 		2D1270A81928ACE60051F5CB /* VideoQueueRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D1270A71928ACE60051F5CB /* VideoQueueRecorder.m */; };
 		2D1270AA1928ADC00051F5CB /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D1270A91928ADC00051F5CB /* libx264.a */; };
 		2D1270AD1928F1CF0051F5CB /* x264Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D1270AC1928F1CF0051F5CB /* x264Manager.m */; };
+		5AB943781929B7AA00ED4E94 /* DataQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB943771929B7AA00ED4E94 /* DataQueue.m */; };
+		5AB943821929D62B00ED4E94 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AB9437F1929D62B00ED4E94 /* libcrypto.a */; };
+		5AB943831929D62B00ED4E94 /* librtmp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AB943801929D62B00ED4E94 /* librtmp.a */; };
+		5AB943841929D62B00ED4E94 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AB943811929D62B00ED4E94 /* libssl.a */; };
+		5AB943861929D6D900ED4E94 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AB943851929D6D900ED4E94 /* libz.dylib */; };
 		5AC82AA31904CDBB00206DE9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AC82AA21904CDBB00206DE9 /* Foundation.framework */; };
 		5AC82AA51904CDBB00206DE9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AC82AA41904CDBB00206DE9 /* CoreGraphics.framework */; };
 		5AC82AA71904CDBB00206DE9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AC82AA61904CDBB00206DE9 /* UIKit.framework */; };
 		5AC82AAD1904CDBB00206DE9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5AC82AAB1904CDBB00206DE9 /* InfoPlist.strings */; };
 		5AC82AAF1904CDBB00206DE9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC82AAE1904CDBB00206DE9 /* main.m */; };
 		5AC82AB31904CDBB00206DE9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC82AB21904CDBB00206DE9 /* AppDelegate.m */; };
-		5AC82AB61904CDBB00206DE9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AC82AB41904CDBB00206DE9 /* Main.storyboard */; };
 		5AC82AB91904CDBB00206DE9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC82AB81904CDBB00206DE9 /* ViewController.m */; };
 		5AC82ABB1904CDBB00206DE9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5AC82ABA1904CDBB00206DE9 /* Images.xcassets */; };
 		5AC82AC21904CDBB00206DE9 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AC82AC11904CDBB00206DE9 /* XCTest.framework */; };
@@ -45,6 +49,12 @@
 		2D1270A91928ADC00051F5CB /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libx264.a; path = x264/libx264.a; sourceTree = "<group>"; };
 		2D1270AB1928F1CF0051F5CB /* x264Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x264Manager.h; sourceTree = "<group>"; };
 		2D1270AC1928F1CF0051F5CB /* x264Manager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = x264Manager.m; sourceTree = "<group>"; };
+		5AB943761929B7AA00ED4E94 /* DataQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataQueue.h; path = ../DataQueue.h; sourceTree = "<group>"; };
+		5AB943771929B7AA00ED4E94 /* DataQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DataQueue.m; path = ../DataQueue.m; sourceTree = "<group>"; };
+		5AB9437F1929D62B00ED4E94 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = librtmp/libcrypto.a; sourceTree = "<group>"; };
+		5AB943801929D62B00ED4E94 /* librtmp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = librtmp.a; path = librtmp/librtmp.a; sourceTree = "<group>"; };
+		5AB943811929D62B00ED4E94 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = librtmp/libssl.a; sourceTree = "<group>"; };
+		5AB943851929D6D900ED4E94 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		5AC82A9F1904CDBB00206DE9 /* AudioTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AC82AA21904CDBB00206DE9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5AC82AA41904CDBB00206DE9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -75,12 +85,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AB943861929D6D900ED4E94 /* libz.dylib in Frameworks */,
 				5AC82AD81904FE5400206DE9 /* AVFoundation.framework in Frameworks */,
 				5AC82AA51904CDBB00206DE9 /* CoreGraphics.framework in Frameworks */,
+				5AB943841929D62B00ED4E94 /* libssl.a in Frameworks */,
+				5AB943831929D62B00ED4E94 /* librtmp.a in Frameworks */,
 				5AC82AA71904CDBB00206DE9 /* UIKit.framework in Frameworks */,
 				5AF9253F19246C6500491283 /* libTestFAAC.a in Frameworks */,
 				5AC82AA31904CDBB00206DE9 /* Foundation.framework in Frameworks */,
 				2D1270AA1928ADC00051F5CB /* libx264.a in Frameworks */,
+				5AB943821929D62B00ED4E94 /* libcrypto.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +133,7 @@
 		5AC82AA11904CDBB00206DE9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5AB943851929D6D900ED4E94 /* libz.dylib */,
 				5AC82AD71904FE5400206DE9 /* AVFoundation.framework */,
 				5AC82AA21904CDBB00206DE9 /* Foundation.framework */,
 				5AC82AA41904CDBB00206DE9 /* CoreGraphics.framework */,
@@ -131,6 +146,11 @@
 		5AC82AA81904CDBB00206DE9 /* AudioTest */ = {
 			isa = PBXGroup;
 			children = (
+				5AB943761929B7AA00ED4E94 /* DataQueue.h */,
+				5AB943771929B7AA00ED4E94 /* DataQueue.m */,
+				5AB9437F1929D62B00ED4E94 /* libcrypto.a */,
+				5AB943801929D62B00ED4E94 /* librtmp.a */,
+				5AB943811929D62B00ED4E94 /* libssl.a */,
 				2D1270A91928ADC00051F5CB /* libx264.a */,
 				5AF9253E19246C6500491283 /* libTestFAAC.a */,
 				5AC82AB11904CDBB00206DE9 /* AppDelegate.h */,
@@ -257,7 +277,6 @@
 			files = (
 				5AC82ABB1904CDBB00206DE9 /* Images.xcassets in Resources */,
 				5AC82AAD1904CDBB00206DE9 /* InfoPlist.strings in Resources */,
-				5AC82AB61904CDBB00206DE9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,6 +297,7 @@
 			files = (
 				5AF9254219246CB100491283 /* AudioQueueRecorder.m in Sources */,
 				5AC82AB91904CDBB00206DE9 /* ViewController.m in Sources */,
+				5AB943781929B7AA00ED4E94 /* DataQueue.m in Sources */,
 				5AC82AB31904CDBB00206DE9 /* AppDelegate.m in Sources */,
 				2D1270A81928ACE60051F5CB /* VideoQueueRecorder.m in Sources */,
 				5AC82AAF1904CDBB00206DE9 /* main.m in Sources */,
@@ -412,18 +432,20 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"AudioTest/include/**",
+					"AudioTest/faac/include/**",
 					"AudioTest/x264/include/**",
+					"AudioTest/librtmp/include/**",
 				);
 				INFOPLIST_FILE = "AudioTest/AudioTest-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AudioTest",
 					"$(PROJECT_DIR)/AudioTest/x264",
+					"$(PROJECT_DIR)/AudioTest/librtmp",
 				);
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "armv7s armv7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -439,17 +461,20 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"AudioTest/include/**",
+					"AudioTest/faac/include/**",
 					"AudioTest/x264/include/**",
+					"AudioTest/librtmp/include/**",
 				);
 				INFOPLIST_FILE = "AudioTest/AudioTest-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AudioTest",
 					"$(PROJECT_DIR)/AudioTest/x264",
+					"$(PROJECT_DIR)/AudioTest/librtmp",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = "armv7 armv7s";
+				VALID_ARCHS = "armv7s armv7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

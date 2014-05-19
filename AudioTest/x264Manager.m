@@ -7,6 +7,7 @@
 //
 
 #import "x264Manager.h"
+#import "DataQueue.h"
 
 @implementation x264Manager
 
@@ -23,6 +24,7 @@
 }
 
 - (void)initForX264{
+    
     
     p264Param = malloc(sizeof(x264_param_t));
     p264Pic  = malloc(sizeof(x264_picture_t));
@@ -59,6 +61,7 @@
 
 - (void)initForFilePath{
     const char *path = [[NSHomeDirectory() stringByAppendingPathComponent:@"tmp/test.264"] cStringUsingEncoding:NSUTF8StringEncoding];
+    [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithUTF8String:path] error:nil];
 //    char *path = [self GetFilePathByfileName:"IOSCamDemo.264"];
     NSLog(@"%s",path);
     fp = fopen(path,"wb");
@@ -78,10 +81,10 @@
     int         i264Nal;
     x264_picture_t pic_out;
     
-    memcpy(p264Pic->img.plane[0], baseAddress0, bufferSize);
+    memcpy(p264Pic->img.plane[0], baseAddress0, 192*144);
     uint8_t * pDst1 = p264Pic->img.plane[1];
     uint8_t * pDst2 = p264Pic->img.plane[2];
-    for( int i = 0; i < bufferSize/4; i ++ )
+    for( int i = 0; i < 192*144/4; i ++ )
     {
         *pDst1++ = *baseAddress1++;
         *pDst2++ = *baseAddress1++;
@@ -107,6 +110,9 @@
             
             memcpy(data, p264Nal[i].p_payload, p264Nal[i].i_payload);
             fwrite(data, 1, i_size, fp);
+            
+//            [[DataQueue sharedInstance] pushData:[NSData dataWithBytes:data length:i_size] withType:DataTypeVideo];
+            
         }
         
     }

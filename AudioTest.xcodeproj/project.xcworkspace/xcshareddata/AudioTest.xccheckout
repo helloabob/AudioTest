@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>BAD8D65C-D289-4797-9A06-1FC019D098F0</string>
+	<key>IDESourceControlProjectName</key>
+	<string>AudioTest</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>174E866A-A18E-42ED-AE7B-787055309C43</key>
+		<string>https://github.com/helloabob/AudioTest.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>AudioTest.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>174E866A-A18E-42ED-AE7B-787055309C43</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/helloabob/AudioTest.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>174E866A-A18E-42ED-AE7B-787055309C43</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>174E866A-A18E-42ED-AE7B-787055309C43</string>
+			<key>IDESourceControlWCCName</key>
+			<string>AudioTest</string>
+		</dict>
+	</array>
+</dict>
+</plist>

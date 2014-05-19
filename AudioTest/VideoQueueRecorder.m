@@ -7,7 +7,7 @@
 //
 
 #import "VideoQueueRecorder.h"
-#import <x264.h>
+#import "x264Manager.h"
 
 @implementation VideoQueueRecorder {
     dispatch_queue_t serial_queue;
@@ -21,7 +21,7 @@
     static VideoQueueRecorder *sharedNetUtilsInstance = nil;
     static dispatch_once_t predicate; dispatch_once(&predicate, ^{
         sharedNetUtilsInstance = [[self alloc] init];
-        sharedNetUtilsInstance->serial_queue = dispatch_queue_create("com.bo.serial_dj", NULL);
+        sharedNetUtilsInstance->serial_queue = dispatch_queue_create("com.bo.serial_video", NULL);
         sharedNetUtilsInstance->producerFps=15;
     });
     return sharedNetUtilsInstance;
@@ -35,7 +35,7 @@
     NSArray *cameras = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
     for (AVCaptureDevice *device in cameras)
     {
-        if (device.position == AVCaptureDevicePositionFront)
+        if (device.position == AVCaptureDevicePositionBack)
             return device;
     }
     return [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -122,13 +122,18 @@
 #pragma mark AVCaptureVideoDataOutputSampleBufferDelegate
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
+    [[x264Manager sharedInstance] encoderToH264:sampleBuffer];
+    
     //捕捉数据输出 要怎么处理虽你便
-    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+//    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
     /*Lock the buffer*/
-    if(CVPixelBufferLockBaseAddress(pixelBuffer, 0) == kCVReturnSuccess)
-    {
-        
-        
+//    if(CVPixelBufferLockBaseAddress(pixelBuffer, 0) == kCVReturnSuccess)
+//    {
+//        NSLog(@"plane_count:%zu", CVPixelBufferGetPlaneCount(pixelBuffer));
+//    
+//        NSData *data = [NSData dataWithBytes:pixelBuffer length:CVPixelBufferGetDataSize(pixelBuffer)];
+//        NSLog(@"data:%@", data);
+    
         
 //        UInt8 *bufferPtr = (UInt8 *)CVPixelBufferGetBaseAddress(pixelBuffer);
 //        size_t buffeSize = CVPixelBufferGetDataSize(pixelBuffer);
@@ -168,7 +173,7 @@
 //        }  
 //        /*We unlock the buffer*/  
 //        CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);   
-    }
+//    }
 }
 
 
