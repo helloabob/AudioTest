@@ -109,9 +109,9 @@
             i_size = p264Nal[i].i_payload;
             
             memcpy(data, p264Nal[i].p_payload, p264Nal[i].i_payload);
-            fwrite(data, 1, i_size, fp);
+//            fwrite(data, 1, i_size, fp);
             
-//            [[DataQueue sharedInstance] pushData:[NSData dataWithBytes:data length:i_size] withType:DataTypeVideo];
+            [[DataQueue sharedInstance] pushData:[NSData dataWithBytes:data length:i_size] withType:DataTypeVideo];
             
         }
         

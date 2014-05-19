@@ -69,14 +69,14 @@ static void HandleInputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuffe
         int nRet=faacEncEncode(hEncoder, (int32_t *)tmp.bytes, inputSamples, outputBuffer, bufferSize);
         
         if (nRet>0) {
-//            NSData *data = [NSData dataWithBytes:outputBuffer length:nRet];
-//            [[DataQueue sharedInstance] pushData:data withType:DataTypeAudio];
-            NSMutableData *dt = [NSMutableData dataWithContentsOfFile:fileName];
-            if (dt==nil) {
-                dt = [NSMutableData data];
-            }
-            [dt appendBytes:outputBuffer length:nRet];
-            [dt writeToFile:fileName atomically:YES];
+            NSData *data = [NSData dataWithBytes:outputBuffer length:nRet];
+            [[DataQueue sharedInstance] pushData:data withType:DataTypeAudio];
+//            NSMutableData *dt = [NSMutableData dataWithContentsOfFile:fileName];
+//            if (dt==nil) {
+//                dt = [NSMutableData data];
+//            }
+//            [dt appendBytes:outputBuffer length:nRet];
+//            [dt writeToFile:fileName atomically:YES];
         }
     });
     

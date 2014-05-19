@@ -14,6 +14,8 @@ typedef enum {
 }DataType;
 
 @interface DataQueue : NSObject
+@property (atomic, retain) NSMutableArray *innerArray;
+
 + (instancetype)sharedInstance;
 - (void)pushData:(NSData *)data withType:(DataType)type;
 - (NSDictionary *)popData;

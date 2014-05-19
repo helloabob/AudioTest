@@ -16,6 +16,8 @@
 #import "DataQueue.h"
 #import <rtmp.h>
 
+char *rtmp_url = "rtmp://192.168.0.122/live/stream_1";
+
 static BOOL canGo=YES;
 
 @interface ViewController ()
@@ -28,11 +30,11 @@ static BOOL canGo=YES;
     dispatch_queue_t serial_queue;
 }
 
-- (void)publish {
+- (void)publishVideo {
     RTMP *_rtmp = RTMP_Alloc();
     RTMP_Init(_rtmp);
     
-    int err=RTMP_SetupURL(_rtmp, "rtmp://131.252.90.190/live/stream_1");
+    int err=RTMP_SetupURL(_rtmp, rtmp_url);
     if (err<0) {
         printf("error in setup");
         return;
@@ -49,6 +51,7 @@ static BOOL canGo=YES;
         return;
     }
     
+    double ts=[[NSDate date] timeIntervalSinceReferenceDate];
     
     while (canGo) {
         NSDictionary *dict = [[DataQueue sharedInstance] popData];
@@ -70,20 +73,32 @@ static BOOL canGo=YES;
 //            static unsigned int ts = 0;
 //            ts+= 62500;
         
-            double ts = [[NSDate date] timeIntervalSince1970];
-            NSLog(@"ts:%f", ts);
+//            unsigned int ts = [[NSDate date] timeIntervalSince1970];
+//            NSLog(@"ts:%f", ts);
+//            GetTickCount();
+            
+//            static unsigned int ts=[[NSDate date] timeIntervalSinceReferenceDate];
+            
+            
+            double dt=[[NSDate date] timeIntervalSinceReferenceDate];
+            
+            unsigned int ts2 = (dt-ts)*1000.0;
+            
+            
+            NSLog(@"ts2:%u", ts2);
+            
             
             rtmp_packet.m_packetType=dt==DataTypeAudio?RTMP_PACKET_TYPE_AUDIO:RTMP_PACKET_TYPE_VIDEO;
             rtmp_packet.m_nBodySize=data.length;
-            rtmp_packet.m_nTimeStamp=ts;
-            rtmp_packet.m_hasAbsTimestamp=YES;
+            rtmp_packet.m_nTimeStamp=ts2;
+            rtmp_packet.m_hasAbsTimestamp=NO;
             rtmp_packet.m_nChannel=0x04;
             rtmp_packet.m_headerType=RTMP_PACKET_SIZE_LARGE;
             rtmp_packet.m_nInfoField2=_rtmp->m_stream_id;
             memcpy(rtmp_packet.m_body, data.bytes, data.length);
             int nRet=RTMP_SendPacket(_rtmp, &rtmp_packet, 0);
             RTMPPacket_Free(&rtmp_packet);
-            NSLog(@"ret:%d", nRet);
+//            NSLog(@"ret:%d", nRet);
         }
         usleep(62500);
     }
@@ -105,7 +120,7 @@ static BOOL canGo=YES;
     [[VideoQueueRecorder sharedInstance] startVideoCapture:self];
     
 //    [self publish];
-//    [self performSelectorInBackground:@selector(publish) withObject:nil];
+    [self performSelectorInBackground:@selector(publishVideo) withObject:nil];
     
 	// Do any additional setup after loading the view, typically from a nib.
     
