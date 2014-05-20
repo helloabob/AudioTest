@@ -8,8 +8,24 @@
 
 #import "x264Manager.h"
 #import "DataQueue.h"
+#import "rtmpDispatcher.h"
+
+
+int sps_len;
+int pps_len;
+uint8_t sps[30];
+uint8_t pps[10];
+
 
 @implementation x264Manager
+
+#pragma mark rtmp func
+
+
+
+#pragma end
+
+
 
 + (instancetype)sharedInstance {
     static x264Manager *sharedNetUtilsInstance = nil;
@@ -78,8 +94,10 @@
     
     unsigned int bufferSize = (uint32_t)CVPixelBufferGetDataSize(pixelBuffer);
     
-    int         i264Nal;
+    
     x264_picture_t pic_out;
+    
+//    NSLog(@"main_thread:%d", [NSThread isMainThread]);
     
     memcpy(p264Pic->img.plane[0], baseAddress0, 192*144);
     uint8_t * pDst1 = p264Pic->img.plane[1];
@@ -90,28 +108,47 @@
         *pDst2++ = *baseAddress1++;
     }
     
-    if(x264_encoder_encode(p264Handle, &p264Nal, &i264Nal, p264Pic ,&pic_out) < 0 )
+    int nal_count;
+    if(x264_encoder_encode(p264Handle, &nal_data, &nal_count, p264Pic ,&pic_out) < 0 )
     {
         fprintf( stderr, "x264_encoder_encode failed/n" );
     }
-    NSLog(@"i264Nal======%d",i264Nal);
-    
-    if (i264Nal > 0) {
-        
-        int i_size;
-        char * data=(char *)szBodyBuffer+100;
-        for (int i=0 ; i<i264Nal; i++) {
-            if (p264Handle->nal_buffer_size < p264Nal[i].i_payload*3/2+4) {
-                p264Handle->nal_buffer_size = p264Nal[i].i_payload*2+4;
-                x264_free( p264Handle->nal_buffer );
-                p264Handle->nal_buffer = x264_malloc( p264Handle->nal_buffer_size );
+    if (nal_count > 0) {
+//        int i_size;
+//        char * data=(char *)szBodyBuffer+100;
+        int i,last=0;
+        NSLog(@"start................(%d)",nal_count);
+        for (i=0; i<nal_count; i++) {
+            if (nal_data[i].i_type==NAL_SPS) {
+                sps_len=nal_data[i].i_payload-4;
+                NSLog(@"sps len:%d", sps_len);
+                memcpy(sps, nal_data[i].p_payload+4, sps_len);
+            }else if(nal_data[i].i_type==NAL_PPS){
+                pps_len=nal_data[i].i_payload-4;
+                memcpy(pps, nal_data[i].p_payload+4, pps_len);
+                NSLog(@"pps len:%d", pps_len);
+                [[rtmpDispatcher sharedInstance] sendSPS:[NSData dataWithBytes:sps length:sps_len] andPPS:[NSData dataWithBytes:pps length:pps_len]];
+            }else{
+                NSLog(@"normal len:%d", nal_data[i].i_payload);
+                [[rtmpDispatcher sharedInstance] sendNormalVideo:[NSData dataWithBytes:nal_data[i].p_payload length:nal_data[i].i_payload-last]];
+                break;
             }
-            i_size = p264Nal[i].i_payload;
+            last+=nal_data[i].i_payload;
             
-            memcpy(data, p264Nal[i].p_payload, p264Nal[i].i_payload);
-//            fwrite(data, 1, i_size, fp);
             
-            [[DataQueue sharedInstance] pushData:[NSData dataWithBytes:data length:i_size] withType:DataTypeVideo];
+            
+            
+//            if (p264Handle->nal_buffer_size < p264Nal[i].i_payload*3/2+4) {
+//                p264Handle->nal_buffer_size = p264Nal[i].i_payload*2+4;
+//                x264_free( p264Handle->nal_buffer );
+//                p264Handle->nal_buffer = x264_malloc( p264Handle->nal_buffer_size );
+//            }
+//            i_size = p264Nal[i].i_payload;
+//            
+//            memcpy(data, p264Nal[i].p_payload, p264Nal[i].i_payload);
+////            fwrite(data, 1, i_size, fp);
+//            
+//            [[DataQueue sharedInstance] pushData:[NSData dataWithBytes:data length:i_size] withType:DataTypeVideo];
             
         }
         

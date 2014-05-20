@@ -15,7 +15,7 @@
     x264_param_t * p264Param;
     x264_picture_t * p264Pic;
     x264_t *p264Handle;
-    x264_nal_t  *p264Nal;
+    x264_nal_t  *nal_data;
     int previous_nal_size;
     unsigned  char * pNal;
     FILE *fp;

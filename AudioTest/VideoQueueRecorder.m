@@ -122,7 +122,14 @@
 #pragma mark AVCaptureVideoDataOutputSampleBufferDelegate
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
-    [[x264Manager sharedInstance] encoderToH264:sampleBuffer];
+    
+    
+//    NSLog(@"main_thread:%d", [NSThread isMainThread]);
+//    dispatch_async(serial_queue, ^(){
+        [[x264Manager sharedInstance] encoderToH264:sampleBuffer];
+//    });
+    
+    
     
     //捕捉数据输出 要怎么处理虽你便
 //    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);

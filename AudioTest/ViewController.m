@@ -14,9 +14,10 @@
 #import "VideoQueueRecorder.h"
 #import "x264Manager.h"
 #import "DataQueue.h"
-#import <rtmp.h>
 
-char *rtmp_url = "rtmp://192.168.0.122/live/stream_1";
+#import "rtmpDispatcher.h"
+
+
 
 static BOOL canGo=YES;
 
@@ -30,83 +31,52 @@ static BOOL canGo=YES;
     dispatch_queue_t serial_queue;
 }
 
-- (void)publishVideo {
-    RTMP *_rtmp = RTMP_Alloc();
-    RTMP_Init(_rtmp);
-    
-    int err=RTMP_SetupURL(_rtmp, rtmp_url);
-    if (err<0) {
-        printf("error in setup");
-        return;
-    }
-    RTMP_EnableWrite(_rtmp);
-    err=RTMP_Connect(_rtmp, NULL);
-    if (err<0) {
-        printf("error in connect");
-        return;
-    }
-    err=RTMP_ConnectStream(_rtmp, 0);
-    if (err<0) {
-        printf("error in connect_stream");
-        return;
-    }
-    
-    double ts=[[NSDate date] timeIntervalSinceReferenceDate];
-    
-    while (canGo) {
-        NSDictionary *dict = [[DataQueue sharedInstance] popData];
-        NSData *data = nil;
-        DataType dt = DataTypeAudio;
-        if ([dict objectForKey:@"1"]) {
-            dt = DataTypeAudio;
-            data = [dict objectForKey:@"1"];
-        } else {
-            dt = DataTypeVideo;
-            data = [dict objectForKey:@"2"];
-        }
-        if (data!=nil) {
-            RTMPPacket rtmp_packet;
 
-            RTMPPacket_Reset(&rtmp_packet);
-            RTMPPacket_Alloc(&rtmp_packet, data.length);
 
-//            static unsigned int ts = 0;
-//            ts+= 62500;
-        
-//            unsigned int ts = [[NSDate date] timeIntervalSince1970];
-//            NSLog(@"ts:%f", ts);
-//            GetTickCount();
-            
-//            static unsigned int ts=[[NSDate date] timeIntervalSinceReferenceDate];
-            
-            
-            double dt=[[NSDate date] timeIntervalSinceReferenceDate];
-            
-            unsigned int ts2 = (dt-ts)*1000.0;
-            
-            
-            NSLog(@"ts2:%u", ts2);
-            
-            
-            rtmp_packet.m_packetType=dt==DataTypeAudio?RTMP_PACKET_TYPE_AUDIO:RTMP_PACKET_TYPE_VIDEO;
-            rtmp_packet.m_nBodySize=data.length;
-            rtmp_packet.m_nTimeStamp=ts2;
-            rtmp_packet.m_hasAbsTimestamp=NO;
-            rtmp_packet.m_nChannel=0x04;
-            rtmp_packet.m_headerType=RTMP_PACKET_SIZE_LARGE;
-            rtmp_packet.m_nInfoField2=_rtmp->m_stream_id;
-            memcpy(rtmp_packet.m_body, data.bytes, data.length);
-            int nRet=RTMP_SendPacket(_rtmp, &rtmp_packet, 0);
-            RTMPPacket_Free(&rtmp_packet);
-//            NSLog(@"ret:%d", nRet);
-        }
-        usleep(62500);
-    }
-    
-    RTMP_Close(_rtmp);
-    RTMP_Free(_rtmp);
-    
-}
+//- (void)publishVideo {
+//    
+//    double ts=[[NSDate date] timeIntervalSinceReferenceDate];
+//    
+//    while (canGo) {
+//        NSDictionary *dict = [[DataQueue sharedInstance] popData];
+//        NSData *data = nil;
+//        DataType dt = DataTypeAudio;
+//        if ([dict objectForKey:@"1"]) {
+//            dt = DataTypeAudio;
+//            data = [dict objectForKey:@"1"];
+//        } else {
+//            dt = DataTypeVideo;
+//            data = [dict objectForKey:@"2"];
+//        }
+//        if (data!=nil) {
+//            RTMPPacket rtmp_packet;
+//            RTMPPacket_Reset(&rtmp_packet);
+//            RTMPPacket_Alloc(&rtmp_packet, data.length);
+//            double dt=[[NSDate date] timeIntervalSinceReferenceDate];
+//            unsigned int ts2 = (dt-ts)*1000.0;
+//            NSLog(@"ts2:%u", ts2);
+//            rtmp_packet.m_packetType=dt==DataTypeAudio?RTMP_PACKET_TYPE_AUDIO:RTMP_PACKET_TYPE_VIDEO;
+//            rtmp_packet.m_nBodySize=data.length;
+//            rtmp_packet.m_nTimeStamp=ts2;
+//            rtmp_packet.m_hasAbsTimestamp=NO;
+//            rtmp_packet.m_nChannel=0x04;
+//            rtmp_packet.m_headerType=RTMP_PACKET_SIZE_LARGE;
+//            rtmp_packet.m_nInfoField2=_rtmp->m_stream_id;
+//            memcpy(rtmp_packet.m_body, data.bytes, data.length);
+//            if (RTMP_IsConnected(_rtmp)) {
+//                int nRet=RTMP_SendPacket(_rtmp, &rtmp_packet, 0);
+//                NSLog(@"ret:%d", nRet);
+//            }
+//            
+//            RTMPPacket_Free(&rtmp_packet);
+//        }
+//        usleep(10000);
+//    }
+//    
+//    RTMP_Close(_rtmp);
+//    RTMP_Free(_rtmp);
+//    
+//}
 
 - (void)viewDidLoad
 {
@@ -115,12 +85,16 @@ static BOOL canGo=YES;
 //    AudioQueueRecorder *recorder = [[AudioQueueRecorder alloc] init];
     
 //    [recorder startRecord];
+    
+    [[rtmpDispatcher sharedInstance] startConnect];
     [[AudioQueueRecorder sharedInstance] startRecord];
     
-    [[VideoQueueRecorder sharedInstance] startVideoCapture:self];
+    
+    
+//    [[VideoQueueRecorder sharedInstance] startVideoCapture:self];
     
 //    [self publish];
-    [self performSelectorInBackground:@selector(publishVideo) withObject:nil];
+//    [self performSelectorInBackground:@selector(publishVideo) withObject:nil];
     
 	// Do any additional setup after loading the view, typically from a nib.
     
@@ -208,24 +182,24 @@ static BOOL canGo=YES;
     
     
     
-    NSError *error = nil;
-    AVCaptureDevice *audioCaptureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
-    AVCaptureSession *captureSession = [[AVCaptureSession alloc] init];
-    [captureSession beginConfiguration];
-    AVCaptureDeviceInput *audioInput = [AVCaptureDeviceInput deviceInputWithDevice:audioCaptureDevice error:&error];
-    [captureSession addInput:audioInput];
-    AVCaptureAudioDataOutput *audioOutput = [[AVCaptureAudioDataOutput alloc] init];
-    [audioOutput setSampleBufferDelegate:self queue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0)];
-    [captureSession addOutput:audioOutput];
-    [audioOutput connectionWithMediaType:AVMediaTypeAudio];
-    [captureSession commitConfiguration];
-    [captureSession startRunning];
-    
-    UIButton *bb = [[UIButton alloc] initWithFrame:CGRectMake(50, 50, 100, 50)];
-    [self.view addSubview:bb];
-    [bb setTitle:@"aaa" forState:UIControlStateNormal];
-    [bb addTarget:self action:@selector(bb) forControlEvents:UIControlEventTouchUpInside];
-    [bb setBackgroundColor:[UIColor brownColor]];
+//    NSError *error = nil;
+//    AVCaptureDevice *audioCaptureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+//    AVCaptureSession *captureSession = [[AVCaptureSession alloc] init];
+//    [captureSession beginConfiguration];
+//    AVCaptureDeviceInput *audioInput = [AVCaptureDeviceInput deviceInputWithDevice:audioCaptureDevice error:&error];
+//    [captureSession addInput:audioInput];
+//    AVCaptureAudioDataOutput *audioOutput = [[AVCaptureAudioDataOutput alloc] init];
+//    [audioOutput setSampleBufferDelegate:self queue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0)];
+//    [captureSession addOutput:audioOutput];
+//    [audioOutput connectionWithMediaType:AVMediaTypeAudio];
+//    [captureSession commitConfiguration];
+//    [captureSession startRunning];
+//    
+//    UIButton *bb = [[UIButton alloc] initWithFrame:CGRectMake(50, 50, 100, 50)];
+//    [self.view addSubview:bb];
+//    [bb setTitle:@"aaa" forState:UIControlStateNormal];
+//    [bb addTarget:self action:@selector(bb) forControlEvents:UIControlEventTouchUpInside];
+//    [bb setBackgroundColor:[UIColor brownColor]];
 }
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag {
@@ -240,45 +214,44 @@ static BOOL canGo=YES;
     NSLog(@"%@", notif);
 }
 
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
-//    NSLog(@"aa:%@", sampleBuffer);
-    AudioStreamBasicDescription audioFormat;
-    audioFormat.mSampleRate = 44100.00;
-    AudioStreamBasicDescription outputFormat;
-    outputFormat.mSampleRate = 8000.0;
-    
-    AudioConverterRef acr;
-    
-    AudioConverterNew(&audioFormat, &outputFormat, &acr);
-    
-    
-    AudioBufferList audioBufferList;
-    NSMutableData *data = [NSMutableData data];
-    CMBlockBufferRef blockBuffer;
-    CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(sampleBuffer, NULL, &audioBufferList, sizeof(audioBufferList), NULL, NULL, 0, &blockBuffer);
-    for( int y=0; y< audioBufferList.mNumberBuffers; y++ ){
-        
-        AudioBuffer audioBuffer = audioBufferList.mBuffers[y];
-//        Float32 *frame = (Float32*)audioBuffer.mData;
-        
-        UInt32 outputSize;
-        void *outputData;
-//        OSStatus status = AudioConverterConvertBuffer(acr, audioBuffer.mDataByteSize, audioBuffer.mData, &outputSize, outputData);
-        
-//        OSStatus status = AudioConverterFillComplexBuffer(acr, <#AudioConverterComplexInputDataProc inInputDataProc#>, <#void *inInputDataProcUserData#>, <#UInt32 *ioOutputDataPacketSize#>, <#AudioBufferList *outOutputData#>, <#AudioStreamPacketDescription *outPacketDescription#>)
-        
-//        Float32 *frame = (Float32*)outputData;
-        
-//        [data appendBytes:frame length:audioBuffer.mDataByteSize];
-        
-//        NSLog(@"status:%d old_size:%d new_size:%d", status, audioBuffer.mDataByteSize, outputSize);
-        
-//        [data appendBytes:frame length:outputSize];
-        
-    }
-    
-    CFRelease(blockBuffer);
-}
+//- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
+////    NSLog(@"aa:%@", sampleBuffer);
+//    AudioStreamBasicDescription audioFormat;
+//    audioFormat.mSampleRate = 44100.00;
+//    AudioStreamBasicDescription outputFormat;
+//    outputFormat.mSampleRate = 8000.0;
+//    
+//    AudioConverterRef acr;
+//    
+//    AudioConverterNew(&audioFormat, &outputFormat, &acr);
+//    
+//    
+//    AudioBufferList audioBufferList;
+//    NSMutableData *data = [NSMutableData data];
+//    CMBlockBufferRef blockBuffer;
+//    CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(sampleBuffer, NULL, &audioBufferList, sizeof(audioBufferList), NULL, NULL, 0, &blockBuffer);
+//    for( int y=0; y< audioBufferList.mNumberBuffers; y++ ){
+//        
+//        AudioBuffer audioBuffer = audioBufferList.mBuffers[y];
+////        Float32 *frame = (Float32*)audioBuffer.mData;
+//        
+//        UInt32 outputSize;
+//        void *outputData;
+////        OSStatus status = AudioConverterConvertBuffer(acr, audioBuffer.mDataByteSize, audioBuffer.mData, &outputSize, outputData);
+//        
+//        
+////        Float32 *frame = (Float32*)outputData;
+//        
+////        [data appendBytes:frame length:audioBuffer.mDataByteSize];
+//        
+////        NSLog(@"status:%d old_size:%d new_size:%d", status, audioBuffer.mDataByteSize, outputSize);
+//        
+////        [data appendBytes:frame length:outputSize];
+//        
+//    }
+//    
+//    CFRelease(blockBuffer);
+//}
 
 - (void)didReceiveMemoryWarning
 {

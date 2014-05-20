@@ -29,6 +29,7 @@
 		5AC82ACC1904CDBB00206DE9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5AC82ACA1904CDBB00206DE9 /* InfoPlist.strings */; };
 		5AC82ACE1904CDBB00206DE9 /* AudioTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC82ACD1904CDBB00206DE9 /* AudioTestTests.m */; };
 		5AC82AD81904FE5400206DE9 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AC82AD71904FE5400206DE9 /* AVFoundation.framework */; };
+		5AD27944192B21010038145D /* rtmpDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AD27943192B21010038145D /* rtmpDispatcher.m */; };
 		5AF9253F19246C6500491283 /* libTestFAAC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF9253E19246C6500491283 /* libTestFAAC.a */; };
 		5AF9254219246CB100491283 /* AudioQueueRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF9254119246CB100491283 /* AudioQueueRecorder.m */; };
 /* End PBXBuildFile section */
@@ -75,6 +76,8 @@
 		5AC82ACB1904CDBB00206DE9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5AC82ACD1904CDBB00206DE9 /* AudioTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioTestTests.m; sourceTree = "<group>"; };
 		5AC82AD71904FE5400206DE9 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		5AD27942192B21010038145D /* rtmpDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rtmpDispatcher.h; sourceTree = "<group>"; };
+		5AD27943192B21010038145D /* rtmpDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = rtmpDispatcher.m; sourceTree = "<group>"; };
 		5AF9253E19246C6500491283 /* libTestFAAC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFAAC.a; sourceTree = "<group>"; };
 		5AF9254019246CB100491283 /* AudioQueueRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioQueueRecorder.h; sourceTree = "<group>"; };
 		5AF9254119246CB100491283 /* AudioQueueRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioQueueRecorder.m; sourceTree = "<group>"; };
@@ -166,6 +169,8 @@
 				2D1270A71928ACE60051F5CB /* VideoQueueRecorder.m */,
 				2D1270AB1928F1CF0051F5CB /* x264Manager.h */,
 				2D1270AC1928F1CF0051F5CB /* x264Manager.m */,
+				5AD27942192B21010038145D /* rtmpDispatcher.h */,
+				5AD27943192B21010038145D /* rtmpDispatcher.m */,
 			);
 			path = AudioTest;
 			sourceTree = "<group>";
@@ -300,6 +305,7 @@
 				5AB943781929B7AA00ED4E94 /* DataQueue.m in Sources */,
 				5AC82AB31904CDBB00206DE9 /* AppDelegate.m in Sources */,
 				2D1270A81928ACE60051F5CB /* VideoQueueRecorder.m in Sources */,
+				5AD27944192B21010038145D /* rtmpDispatcher.m in Sources */,
 				5AC82AAF1904CDBB00206DE9 /* main.m in Sources */,
 				2D1270AD1928F1CF0051F5CB /* x264Manager.m in Sources */,
 			);

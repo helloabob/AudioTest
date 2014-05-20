@@ -9,6 +9,7 @@
 #import "AudioQueueRecorder.h"
 #import <faac.h>
 #import "DataQueue.h"
+#import "rtmpDispatcher.h"
 
 faacEncHandle hEncoder;
 unsigned long inputSamples;
@@ -19,6 +20,8 @@ NSString *fileName;
 @implementation AudioQueueRecorder {
     
     dispatch_queue_t serial_queue;
+    
+    
 
 }
 
@@ -69,8 +72,12 @@ static void HandleInputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuffe
         int nRet=faacEncEncode(hEncoder, (int32_t *)tmp.bytes, inputSamples, outputBuffer, bufferSize);
         
         if (nRet>0) {
-            NSData *data = [NSData dataWithBytes:outputBuffer length:nRet];
-            [[DataQueue sharedInstance] pushData:data withType:DataTypeAudio];
+            
+            
+            [[rtmpDispatcher sharedInstance] sendNormalAudio:[NSData dataWithBytes:outputBuffer length:nRet]];
+            
+//            NSData *data = [NSData dataWithBytes:outputBuffer length:nRet];
+//            [[DataQueue sharedInstance] pushData:data withType:DataTypeAudio];
 //            NSMutableData *dt = [NSMutableData dataWithContentsOfFile:fileName];
 //            if (dt==nil) {
 //                dt = [NSMutableData data];
@@ -118,6 +125,14 @@ static void HandleInputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuffe
     ptr->inputFormat=FAAC_INPUT_16BIT;
     printf("outputFormat:%u\n",ptr->outputFormat);
     faacEncSetConfiguration(hEncoder, ptr);
+    
+    unsigned char *tmp;
+    unsigned long spec_len;
+    faacEncGetDecoderSpecificInfo(hEncoder, &tmp, &spec_len);
+    [[rtmpDispatcher sharedInstance] sendAACSpec:[NSData dataWithBytes:tmp length:spec_len]];
+    
+    
+    
     
     outputBuffer=malloc(maxOutputBytes);
     
