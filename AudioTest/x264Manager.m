@@ -46,7 +46,7 @@ uint8_t pps[10];
     p264Pic  = malloc(sizeof(x264_picture_t));
     memset(p264Pic,0,sizeof(x264_picture_t));
     //x264_param_default(p264Param);  //set default param
-    x264_param_default_preset(p264Param, "ultrafast", "zerolatency");
+    x264_param_default_preset(p264Param, "veryfast", "zerolatency");
     p264Param->i_threads = 1;
     p264Param->i_width   = 192;  //set frame width
     p264Param->i_height  = 144;  //set frame height
@@ -69,7 +69,7 @@ uint8_t pps[10];
         fprintf( stderr, "x264_encoder_open failed/n" );
         return ;
     }
-    x264_picture_alloc(p264Pic, X264_CSP_YV12, p264Param->i_width, p264Param->i_height);
+    x264_picture_alloc(p264Pic, X264_CSP_I420, p264Param->i_width, p264Param->i_height);
     p264Pic->i_type = X264_TYPE_AUTO;
     
     
@@ -136,9 +136,9 @@ uint8_t pps[10];
             }else{
                 NSLog(@"normal len:%d", nal_data[i].i_payload);
                 [[rtmpDispatcher sharedInstance] sendNormalVideo:[NSData dataWithBytes:nal_data[i].p_payload length:nal_data[i].i_payload]];
-                break;
+//                break;
             }
-            last+=nal_data[i].i_payload;
+//            last+=nal_data[i].i_payload;
             
             
             

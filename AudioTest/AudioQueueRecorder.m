@@ -17,6 +17,7 @@ unsigned long maxOutputBytes;
 unsigned char *outputBuffer;
 NSString *fileName;
 
+
 @implementation AudioQueueRecorder {
     
     dispatch_queue_t serial_queue;
@@ -73,7 +74,8 @@ static void HandleInputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuffe
         
         if (nRet>0) {
             
-            
+            NSLog(@"start audio...");
+            NSLog(@"aac_data_length:%d",nRet);
             [[rtmpDispatcher sharedInstance] sendNormalAudio:[NSData dataWithBytes:outputBuffer length:nRet]];
             
 //            NSData *data = [NSData dataWithBytes:outputBuffer length:nRet];
@@ -129,8 +131,9 @@ static void HandleInputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuffe
     unsigned char *tmp;
     unsigned long spec_len;
     faacEncGetDecoderSpecificInfo(hEncoder, &tmp, &spec_len);
+    NSLog(@"aac_spec:%02x    %02x",tmp[0],tmp[1]);
     [[rtmpDispatcher sharedInstance] sendAACSpec:[NSData dataWithBytes:tmp length:spec_len]];
-    
+    free(tmp);
     
     
     
@@ -147,7 +150,8 @@ static void HandleInputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuffe
     format->mSampleRate = 8000.0;
     format->mFormatID = kAudioFormatLinearPCM;
 //    format->mFormatFlags = kLinearPCMFormatFlagIsNonInterleaved|kLinearPCMFormatFlagIsNonMixable;
-    format->mFormatFlags = kAudioFormatFlagIsSignedInteger;
+//    format->mFormatFlags = kAudioFormatFlagIsSignedInteger;
+    format->mFormatFlags=kLinearPCMFormatFlagIsSignedInteger|kLinearPCMFormatFlagIsPacked;
     format->mChannelsPerFrame = 1;
     format->mBitsPerChannel = 16;
     format->mFramesPerPacket = 1;

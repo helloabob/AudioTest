@@ -14,9 +14,9 @@
 #define RTMP_HEAD_SIZE (sizeof(RTMPPacket)+RTMP_MAX_HEADER_SIZE)
 
 
-//char *rtmp_url = "rtmp://192.168.0.122/live/stream_1";
+char *rtmp_url = "rtmp://192.168.0.124/live/stream_1";
 //char *rtmp_url = "rtmp://131.252.90.53/live/stream_1";
-char *rtmp_url = "rtmp://131.252.90.95/live/stream_1";
+//char *rtmp_url = "rtmp://131.252.90.95/live/stream_1";
 
 
 @implementation rtmpDispatcher {
@@ -250,6 +250,7 @@ char *rtmp_url = "rtmp://131.252.90.95/live/stream_1";
     
     /*调用发送接口*/
     RTMP_SendPacket(_rtmp,packet,TRUE);
+    free(packet);
 }
 
 - (void)sendNormalAudio:(NSData *)data {
@@ -281,10 +282,13 @@ char *rtmp_url = "rtmp://131.252.90.95/live/stream_1";
         body[1] = 0x01;
         memcpy(&body[2],buf,len);
         
+        static unsigned long ts2 = 0;
+        ts2+=125;
+        
         packet->m_packetType = RTMP_PACKET_TYPE_AUDIO;
         packet->m_nBodySize = len+2;
         packet->m_nChannel = 0x04;
-        packet->m_nTimeStamp = timeoffset;
+        packet->m_nTimeStamp = ts2;
         packet->m_hasAbsTimestamp = 0;
         packet->m_headerType = RTMP_PACKET_SIZE_MEDIUM;
         packet->m_nInfoField2 = _rtmp->m_stream_id;
