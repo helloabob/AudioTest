@@ -15,7 +15,9 @@
 
 
 //char *rtmp_url = "rtmp://192.168.0.122/live/stream_1";
-char *rtmp_url = "rtmp://131.252.90.53/live/stream_1";
+//char *rtmp_url = "rtmp://131.252.90.53/live/stream_1";
+char *rtmp_url = "rtmp://131.252.90.95/live/stream_1";
+
 
 @implementation rtmpDispatcher {
     RTMP *_rtmp;
@@ -66,7 +68,7 @@ char *rtmp_url = "rtmp://131.252.90.53/live/stream_1";
 }
 
 - (void)sendSPS:(NSData *)sps_data andPPS:(NSData *)pps_data {
-    NSLog(@"sps:%@\npps:%@", sps_data,pps_data);
+//    NSLog(@"sps:%@\npps:%@", sps_data,pps_data);
     RTMPPacket * packet;
     unsigned char * body;
     int i;
@@ -89,31 +91,41 @@ char *rtmp_url = "rtmp://131.252.90.53/live/stream_1";
     int pps_len=pps_data.length;
     
     i = 0;
+    /*17:1-keyframe, 7-AVC*/
     body[i++] = 0x17;
+    /*AVC sequence header  AVC packet type*/
     body[i++] = 0x00;
     
+    /*fixed format  AVC时，全0，无意义*/
     body[i++] = 0x00;
     body[i++] = 0x00;
     body[i++] = 0x00;
     
-    /*AVCDecoderConfigurationRecord*/
+    /*AVCDecoderConfigurationRecord  configurationVersion*/
     body[i++] = 0x01;
+    /*0x42*/
     body[i++] = sps[1];
+    /*0x00   now  0xc0*/
     body[i++] = sps[2];
+    /*0x1e   now  0x15*/
     body[i++] = sps[3];
     body[i++] = 0xff;
     
-    /*sps*/
+    /*sps flag*/
     body[i++]   = 0xe1;
+    /*sps length*/
     body[i++] = (sps_len >> 8) & 0xff;
     body[i++] = sps_len & 0xff;
+    /*sps content*/
     memcpy(&body[i],sps,sps_len);
     i +=  sps_len;
     
-    /*pps*/
+    /*pps flag*/
     body[i++]   = 0x01;
+    /*pps length*/
     body[i++] = (pps_len >> 8) & 0xff;
     body[i++] = (pps_len) & 0xff;
+    /*pps content*/
     memcpy(&body[i],pps,pps_len);
     i +=  pps_len;
     
@@ -122,7 +134,7 @@ char *rtmp_url = "rtmp://131.252.90.53/live/stream_1";
     packet->m_nChannel = 0x04;
     packet->m_nTimeStamp = 0;
     packet->m_hasAbsTimestamp = 0;
-    packet->m_headerType = RTMP_PACKET_SIZE_MEDIUM;
+    packet->m_headerType = RTMP_PACKET_SIZE_LARGE;
     packet->m_nInfoField2 = _rtmp->m_stream_id;
     
     /*调用发送接口*/
@@ -131,7 +143,7 @@ char *rtmp_url = "rtmp://131.252.90.53/live/stream_1";
 }
 
 - (void)sendNormalVideo:(NSData *)data {
-    NSLog(@"nor:%@", data);
+//    NSLog(@"nor:%@", data);
     int type;
     long timeoffset;
     RTMPPacket * packet;
@@ -174,11 +186,14 @@ char *rtmp_url = "rtmp://131.252.90.53/live/stream_1";
         body[0] = 0x17;
     }
     
+    /*AVC NALU*/
     body[1] = 0x01;   /*nal unit*/
+    /*composition time*/
     body[2] = 0x00;
     body[3] = 0x00;
     body[4] = 0x00;
     
+    /*NALU length*/
     body[5] = (len >> 24) & 0xff;
     body[6] = (len >> 16) & 0xff;
     body[7] = (len >>  8) & 0xff;
@@ -187,12 +202,15 @@ char *rtmp_url = "rtmp://131.252.90.53/live/stream_1";
     /*copy data*/
     memcpy(&body[9],buf,len);
     
+    static unsigned long ts2 = 0;
+    ts2+=67;
+    
     packet->m_hasAbsTimestamp = 0;
     packet->m_packetType = RTMP_PACKET_TYPE_VIDEO;
 //    packet->m_nInfoField2 = winsys->rtmp->m_stream_id;
     packet->m_nInfoField2=_rtmp->m_stream_id;
     packet->m_nChannel = 0x04;
-    packet->m_headerType = RTMP_PACKET_SIZE_LARGE;
+    packet->m_headerType = RTMP_PACKET_SIZE_MEDIUM;
     packet->m_nTimeStamp = timeoffset;
     
     /*调用发送接口*/

@@ -12,17 +12,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
-    unsigned char a[2];
-    a[0]=0xf9;
-    a[1]=0x0b;
-    
-    NSMutableData *dd = [NSMutableData data];
-    [dd appendBytes:&a[0] length:1];
-    [dd appendBytes:&a[1] length:1];
-    
-    NSLog(@"dd:%@", dd);
-    
     // Override point for customization after application launch.
     return YES;
 }
