@@ -14,8 +14,8 @@
 #define RTMP_HEAD_SIZE (sizeof(RTMPPacket)+RTMP_MAX_HEADER_SIZE)
 
 
-char *rtmp_url = "rtmp://192.168.0.124/live/stream_1";
-//char *rtmp_url = "rtmp://131.252.90.53/live/stream_1";
+//char *rtmp_url = "rtmp://192.168.0.124/live/stream_1";
+char *rtmp_url = "rtmp://131.252.90.157/live/stream_1";
 //char *rtmp_url = "rtmp://131.252.90.95/live/stream_1";
 
 
@@ -239,6 +239,11 @@ char *rtmp_url = "rtmp://192.168.0.124/live/stream_1";
     body[0] = 0xAF;
     body[1] = 0x00;
     memcpy(&body[2],spec_buf,len); /*spec_buf是AAC sequence header数据*/
+    
+    /*fix samplerate from 0x25->0x21   =>   1011->0011 */
+    if (body[3]==0x25) {
+        body[3]=0x21;
+    }
     
     packet->m_packetType = RTMP_PACKET_TYPE_AUDIO;
     packet->m_nBodySize = len+2;
