@@ -92,7 +92,7 @@ uint8_t pps[10];
     uint8_t  *baseAddress0 = (uint8_t *)CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
     uint8_t  *baseAddress1 = (uint8_t *)CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 1);
     
-    unsigned int bufferSize = (uint32_t)CVPixelBufferGetDataSize(pixelBuffer);
+//    unsigned int bufferSize = (uint32_t)CVPixelBufferGetDataSize(pixelBuffer);
     
     
     x264_picture_t pic_out;
