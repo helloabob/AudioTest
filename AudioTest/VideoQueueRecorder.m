@@ -35,7 +35,7 @@
     NSArray *cameras = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
     for (AVCaptureDevice *device in cameras)
     {
-        if (device.position == AVCaptureDevicePositionFront)
+        if (device.position == AVCaptureDevicePositionBack)
             return device;
     }
     return [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
