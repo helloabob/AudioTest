@@ -94,7 +94,7 @@ uint8_t pps[10];
     
 //    unsigned int bufferSize = (uint32_t)CVPixelBufferGetDataSize(pixelBuffer);
     
-//    NSLog(@"w:%d h:%d", CVPixelBufferGetWidth(pixelBuffer), CVPixelBufferGetHeight(pixelBuffer));
+    NSLog(@"w:%d h:%d", CVPixelBufferGetWidth(pixelBuffer), CVPixelBufferGetHeight(pixelBuffer));
     
     x264_picture_t pic_out;
     

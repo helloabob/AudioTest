@@ -443,6 +443,7 @@
 					"AudioTest/librtmp/include/**",
 				);
 				INFOPLIST_FILE = "AudioTest/AudioTest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AudioTest",
@@ -472,6 +473,7 @@
 					"AudioTest/librtmp/include/**",
 				);
 				INFOPLIST_FILE = "AudioTest/AudioTest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AudioTest",

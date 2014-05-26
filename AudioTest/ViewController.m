@@ -86,7 +86,7 @@ static BOOL canGo=YES;
     
 //    [recorder startRecord];
     
-    [[rtmpDispatcher sharedInstance] startConnect];
+//    [[rtmpDispatcher sharedInstance] startConnect];
 //    [[AudioQueueRecorder sharedInstance] startRecord];
     [[VideoQueueRecorder sharedInstance] startVideoCapture:self];
     

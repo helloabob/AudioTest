@@ -76,13 +76,13 @@
     // On iPhone 3G, the recommended pixel format choices are kCVPixelFormatType_422YpCbCr8 or kCVPixelFormatType_32BGRA.
     //
     AVCaptureVideoDataOutput *avCaptureVideoDataOutput = [[AVCaptureVideoDataOutput alloc] init];
-//    NSDictionary*settings = [[NSDictionary alloc] initWithObjectsAndKeys:
-//                             //[NSNumber numberWithUnsignedInt:kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange], kCVPixelBufferPixelFormatTypeKey,
-//                             [NSNumber numberWithInt:240], (id)kCVPixelBufferWidthKey,
-//                             [NSNumber numberWithInt:320], (id)kCVPixelBufferHeightKey,
-//                             nil];
-//    avCaptureVideoDataOutput.videoSettings = settings;
-//    [settings release];
+    NSDictionary*settings = [[NSDictionary alloc] initWithObjectsAndKeys:
+                             //[NSNumber numberWithUnsignedInt:kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange], kCVPixelBufferPixelFormatTypeKey,
+                             [NSNumber numberWithInt:240], AVVideoWidthKey,
+                             [NSNumber numberWithInt:320], AVVideoHeightKey,
+                             nil];
+    avCaptureVideoDataOutput.videoSettings = settings;
+    [settings release];
     avCaptureVideoDataOutput.minFrameDuration = CMTimeMake(1, self->producerFps);
     /*We create a serial queue to handle the processing of our frames*/
 //    dispatch_queue_t queue = dispatch_queue_create("org.doubango.idoubs", NULL);
